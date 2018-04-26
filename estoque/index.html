@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Projeto Estoque</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<script
+	src="http://code.jquery.com/jquery-3.3.1.min.js"
+	integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+	crossorigin="anonymous"></script>
+	<!-- Carregando o Bootstrap via CND-->
+	<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
+	<!-- Carregando o Angular via CND-->
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular.min.js"></script>
+	<!-- Carregando o BootstrapDialog via CND-->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap3-dialog/1.35.4/css/bootstrap-dialog.min.css" />
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap3-dialog/1.35.4/js/bootstrap-dialog.min.js"></script>
+	<!-- Carregando o Js do App-->
+	<script src="controller/app.js"></script>
+	<!-- -->
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+	rel="stylesheet">
+</head>
+<body ng-app="estoqueApp" ng-controller="estoqueController">
+
+	<div class="container">
+		<div class="row">
+			<div class="col-md-6">
+				<div class="card">
+					<div class="card-header bg-success text-white text-center">
+						Cadastro de Grupos
+					</div>
+					<div class="card-body">
+						<form class="form-horizontal" method="post" ng-submit="salvaGrupo(grupo)">
+							<fieldset>
+
+								<!-- Form Name -->
+								<legend>Controle de Grupos</legend>
+
+								<!-- Text input-->
+								<div class="form-group">
+									<label class="col-md-4 control-label" for="id">Código:</label>  
+									<div class="col-md-6">
+										<input id="id" name="id" type="text" readonly 
+										ng-model="grupo.id"
+										placeholder="(gerado automático)" class="form-control input-md">
+
+									</div>
+								</div>
+
+								<!-- Text input-->
+								<div class="form-group">
+									<label class="col-md-4 control-label" for="nome">Descrição</label>  
+									<div class="col-md-6">
+										<input id="nome" name="nome" 
+										ng-model="grupo.nome"
+										type="text" placeholder="Descrição do Grupo" class="form-control input-md">
+
+									</div>
+								</div>
+
+								<!-- Multiple Radios (inline) -->
+								<div class="form-group">
+									<label class="col-md-4 control-label" for="status">Situação</label>
+									<div class="col-md-4"> 
+										<label class="radio-inline" for="status-0">
+											<input type="radio" name="status" 
+											ng-model="grupo.status" 
+											id="status-0" value="1" checked="checked">
+											Disponivel
+										</label> 
+										<label class="radio-inline" for="status-1">
+											<input type="radio" name="status" 
+											ng-model="grupo.status"
+											id="status-1" value="0">
+											Indisponivel
+										</label>
+									</div>
+								</div>
+
+								<!-- Button (Double) -->
+								<div class="form-group">
+									<label class="col-md-4 control-label" for="button1id"></label>
+									<div class="col-md-8">
+										<button id="button1id" name="button1id" class="btn btn-success">Salvar</button>
+										<button id="button2id" name="button2id" class="btn btn-danger">Cancelar</button>
+									</div>
+								</div>
+
+							</fieldset>
+						</form>
+
+					</div>
+					<div class="card-footer bg-success text-white text-center">
+						Campos marcados com * são obrigatórios
+					</div>
+				</div>
+			</div>
+
+			<div class="col-md-6">
+				<div class="card">
+					<div class="card-header bg-primary text-white text-center">
+						Listagem dos Grupos
+					</div>
+					<div class="card-body">
+						<div class="table-responsive">
+							<table class="table table-sm table-bordered table-striped" ng-init="carregaGrupos()">
+								<tr class="bg-light">
+									<th>Código</th>
+									<th>Descrição</th>
+									<th>Criado em</th>
+									<th>Ativo?</th>
+									<th colspan="2" class="text-center">Opções</th>
+								</tr>
+								<tr ng-repeat="grupo in grupos">
+									<td>{{grupo.id}}</td>
+									<td>{{grupo.nome}}</td>
+									<td>{{grupo.dataCriacao|date:'dd/MM/yyyy HH:mm'}}</td>
+									<td>{{grupo.status|simNao}}</td>
+									<td>
+										<button type="button" class="btn btn-sm btn-info" title="Editar o grupo">Editar</button>
+									</td>
+									<td>
+										<button type="button" class="btn btn-sm btn-outline-danger" title="Apagar o grupo"><i class="material-icons">delete</i>Apagar</button>
+									</td>
+								</tr>
+							</table>
+						</div>
+					</div>
+					<div class="card-footer bg-primary text-white text-center">
+						Total de Registros: <kbd>{{grupos.length}}</kbd>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</body>
+</html>
