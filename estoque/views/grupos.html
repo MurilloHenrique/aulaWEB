@@ -1,0 +1,148 @@
+<div ng-include src="'views/menu.html'"></div><br>
+<div class="container-fluid">
+    <div class="row">
+        <!-- coluna do formulario -->
+        <div class="col-md-6">
+            <!-- criacao do painel do formulario -->
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h4><i class="glyphicon glyphicon-credit-card"></i> Cadastro de Grupos de Produtos</h4>
+                </div>                    
+                <div class="panel-body">                    
+                    <!-- formulario criado através do site http://bootsnipp.com/forms -->
+                    <form name="formGrupo" class="form-horizontal"   ng-submit="salvaGrupo(grupo);
+                            limpaGrupo(formGrupo);">
+                        <fieldset>
+                            <!-- titulo do formulario -->
+                            <legend>Formulário de Grupos</legend>
+                            <!-- Exemplo de Caixa de Texto -->
+                            <div class="form-group">
+                                <label class="col-md-2 control-label" for="id">Código:</label>  
+                                <div class="col-md-4">
+                                    <input id="id" name="id" type="text" placeholder="Gerado automaticamente" class="form-control input-md" readonly ng-model="grupo.id" value="{{grupo.id}}">                                    
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-2 control-label" for="descricao">Descrição:*</label>  
+                                <div class="col-md-8">
+                                    <input id="descricao" name="descricao" type="text" placeholder="Descrição do Grupo" class="form-control input-md" required 
+                                           ng-model="grupo.nome" value="{{grupo.nome}}" ng-minlength="3"  ng-maxlength="50">  
+                              
+                                    <div ng-class="{'alert alert-danger': formGrupo.nome.$invalid}" 
+                                         ng-messages="formGrupo.nome.$error" ng-if="formGrupo.nome.$touched">
+                                        <!-- somente exibiremos as mensagens de erros após o campo ter sido 'tocado' touched -->
+                                        <p ng-message="minlength">A descrição do grupo é muito curta.</p>
+                                        <p ng-message="maxlength">A descrição do grupo é muito longa.</p>
+                                        <p ng-message="required">A descrição do grupo é obrigatória.</p>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <!-- Exemplo de Checkbox -->
+                            <div class="form-group">
+                                <label class="col-md-2 control-label" for="status">Status:*</label>
+                                <div class="col-md-4">
+                                    <div class="checkbox">
+
+                                        <input type="checkbox" id="status" name="status" ng-model="grupo.status" ng-checked="grupo.status == 1" ng-true-value="1" ng-false-value="0" >     
+                                        <label class="control-label" for="status">Grupo está ativo para uso?</label>
+                                    </div>                                    
+                                </div>
+                            </div>
+                            <!-- Exemplo de botão -->
+                            <div class="well">
+                                <div class="form-group">
+                                    <label class="col-md-2 control-label"></label>
+                                    <div class="col-md-8">
+                                        <button id="salvar" name="salvar" class="btn btn-success" type="submit" title="Salva os dados do formulário" data-ng-disabled="formGrupo.$invalid"><i class="glyphicon glyphicon-save"></i>&nbsp;Salvar os dados</button>
+                                        <a href="" class="btn btn-danger" ng-click="limpaArrayGrupo();
+                                            menu()" title="Cancelar o cadastro"><span class="glyphicon glyphicon-share-alt"></span> Cancelar</a>
+
+                                        <div ng-messages='requisicaoServidor'>
+                                            <div ng-message='aguarde' class='text-info'>Por favor, aguarde...<img src='img/aguarde.gif'></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
+
+
+                    </form>
+                    <!-- exibir todas as propriedades do formulario
+                    {{ formGrupo | json }} -->
+                </div>
+                <div class="panel-footer">
+                    <h4>Campos marcados com * são de preenchimento obrigatório</h4>
+                </div>
+            </div>
+        </div>
+        <!-- coluna da tabela -->
+        <div class="col-md-6">
+            <!-- caixa de Pesquisa (somente é exibida quando há algum registro no array) -->
+            <div ng-show="grupos.length !== 0">
+                <div class="input-group">
+                    <span class="input-group-addon" id="basic-addon1"><i class="glyphicon glyphicon-search"></i></span>
+                    <input type="text"  ng-model="filterGrupo"
+                           class="form-control input-lg" placeholder="Procurar...">
+                </div>
+            </div> 
+            <!-- fim da caixa de pesquisa -->
+
+            <!-- tabela com os dados. Ao inicializar, carrega os dados no array -->
+            <div class="panel panel-primary">
+                <div class="panel-heading"><h4><span class="glyphicon glyphicon-th-list"></span> Listagem dos Grupos</h4></div>
+                <div class="panel-body">                    
+                    <div class="table-responsive">             
+                        <table class="table table-hover table-bordered" ng-init="carregaGrupos();" ng-show="grupos.length > 0">
+                            <tr>
+                                <th>Código</th>
+                                <th>Descrição</th>
+                                <th>Criado em</th>
+                                <th>Ativo?</th>
+                                <th colspan="2">Opções</th>
+                            </tr>
+                            <!-- utilizando a paginacao -->
+                            <tr dir-paginate="grupo in grupos | filter:filterGrupo |
+                                itemsPerPage: pageSize" current-page="currentPage" 
+                                pagination-id="gruposPagination">   
+                                <td>{{grupo.id}}</td>
+                                <td>{{grupo.nome}}</td>
+                                <td>{{grupo.dataCriacao| date:'shortDate'}}</td>
+                                <td>{{grupo.status| simNao}}</td>  
+                                <td>
+                                    <button type="button" ng-click="obtemGrupoPeloId(grupo)" class="btn btn-info" 
+                                            title="Editar o registro corrente"><i class="glyphicon glyphicon-edit"></i><small>Editar</small>                                    
+                                    </button>                                 
+                                </td>
+                                <td>                                          
+                                    <button type="button" class="btn btn-danger"  ng-click="confirmaExclusaoGrupo(grupo)">
+                                        <i class="glyphicon glyphicon-trash"></i><small>Excluir</small>
+                                    </button>    
+
+                                </td>                                
+                            </tr>                            
+                        </table>                
+                    </div>
+                </div>
+                <div class="panel-footer" ng-show="grupos.length > 0">
+                    <span class="badge pull-right">Total de Registros: {{(grupos|filter:filterGrupo).length}} de {{grupos.length}}</span> 
+                </div>
+                <!-- Alerta quando não existem registros -->
+                <div class="alert alert-info"
+                     ng-show="grupos.length === 0">
+                    <p class="text-info">
+                        <span class="glyphicon glyphicon-ok"></span>
+                        Ainda não há nenhum registro cadastrado.
+                    </p>
+                </div> 
+                <!-- paginacao -->
+                <div class="text-center">
+                    <dir-pagination-controls boundary-links="true"
+                                             pagination-id="gruposPagination" 
+                                             on-page-change="pageChangeHandler(newPageNumber)"
+                                             template-url="views/paginacao.html"></dir-pagination-controls>
+                </div>
+                <!-- fim do alerta --> 
+            </div>
+        </div>
+    </div>

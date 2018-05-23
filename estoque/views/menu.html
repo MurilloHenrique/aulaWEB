@@ -1,0 +1,42 @@
+<!-- Para ter o acesso aos ícones do glyphicon, acesse: http://getbootstrap.com/components/#glyphicons -->
+<!-- Para ter sugestões de menus com Bootstrap, visite: http://bootsnipp.com/ -->
+<br><br><br>
+<div class="row">
+    <div class="container">
+        <div class="col-sm-9">
+            <div class="alert alert-info" role="alert">
+                <strong>{{Configuracoes.nomeUsuario}}</strong>, seja bem vindo ao sistema! Escolha a opção desejada no menu abaixo. <span class="glyphicon glyphicon-arrow-down"></span>
+            </div>
+            <ul class="nav nav-tabs" >
+                <li class="active"><a href="index.html"><span class="glyphicon glyphicon-home"></span> Início</a></li>
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href=""><span class="glyphicon glyphicon-th-list"></span> Cadastros
+                        <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#/usuarios"><span class="glyphicon glyphicon-lock"></span> Usuários</a></li>
+                        <li class="disabled"><a href="#/clientes"><span class="glyphicon glyphicon-user"></span> Clientes</a></li>
+                        <li><a href="#/produtos"><span class="glyphicon glyphicon-tag"></span> Produtos</a></li>
+                        <li><a href="#/grupos"><span class="glyphicon glyphicon-tags"></span> Grupos</a></li>                         
+                    </ul>
+                </li>
+                 <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href=""><span class="glyphicon glyphicon-tags"></span> Movimentações
+                        <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#/pedidos"><span class="glyphicon glyphicon-shopping-cart"></span> Novo Pedido</a></li>
+                        <li><a href="#/consultapedidos"><span class="glyphicon glyphicon-filter"></span> Procura Pedidos</a></li>
+                    </ul>
+                </li>
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href=""><span class="glyphicon glyphicon-print"></span> Relatórios
+                        <span class="caret"></span></a>
+                    <ul class="dropdown-menu">                        
+                        <li><a href="#/relgrupos"><span class="glyphicon glyphicon-tags"></span> Grupos</a></li>                         
+                    </ul>
+                </li>
+                <li><a href="#/graficos"><span class="glyphicon glyphicon-signal"></span> Gráficos</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+

@@ -1,0 +1,54 @@
+<div ng-include src="'views/menu.html'"></div><br>
+<div class="container" id="grafico">
+    <div class="row">
+		<div class="col-md-12 well">
+			<h3 class='text-info'>
+				<i class="glyphicon glyphicon-align-left"></i> Gráfico de Produtos por Grupos
+			</h3>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-12">
+			<div class="row" ng-init="carregaGraficoProdutos()"> 
+                            <!--
+                            Para saber mais sobre a API do Google:
+                            https://developers.google.com/chart/image/docs/gallery/bar_charts
+                            -->
+                            
+				<div class="col-md-6">
+					 <div class="panel panel-success">
+                <div class="panel-heading">
+                    <h4><i class="glyphicon glyphicon-adjust"></i> Gráfico de Pizza</h4>
+                </div>                    
+                <div class="panel-body">    
+                    <img src='http://chart.apis.google.com/chart?chtt=Quantidade+de+Produtos+Por+Grupo&cht=p3&chd=t:{{dadosGrafico}}&chs=300x200&chdl={{descricaoGrafico}}' alt='Produtos por Grupo - Pizza' title='Produtos por Grupo - Pizza' />
+                                                
+					</div>
+				</div>
+                                </div>
+				<div class="col-md-6">
+					 <div class="panel panel-warning">
+                <div class="panel-heading">
+                    <h4><i class="glyphicon glyphicon-stats"></i> Gráfico de Barras</h4>
+                </div>                    
+                <div class="panel-body">                                              
+                                            
+                                            <img src='http://chart.apis.google.com/chart?cht=bvg&chs=300x200&chd=t:{{dadosGrafico}}&chxr=1,0,10&chds=0,10&chco=FF0000|00FF00&chxt=x,y&chxl=0:{{descricaoGrafico}}|2:||Grupos de Produtos||&chtt=Análise+Gráfica+dos+Produtos&chts=000000,5,5' >
+				
+                                                
+					</div>
+				</div>
+                                </div>
+			
+			</div>
+		</div>
+	</div>
+</div>
+<div class="row">
+    <div class="container" >        
+        
+        <a href="" ng-click="imprimeDiv('grafico','Análise Gráfica');"class="btn btn-success"><span class="glyphicon glyphicon-print"></span> Imprimir</a>
+    </div>
+    
+</div>
+

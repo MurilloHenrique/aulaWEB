@@ -1,0 +1,10 @@
+<!-- Para ter sugestões de rodapés com Bootstrap, visite: http://bootsnipp.com/ -->
+<footer class="footer" style = "position:fixed;left:0px;bottom:0px;height:30px;width:100%;background:#000;">
+    <div class="container" ng-controller='horaController'>
+         <div class="col-md-12">
+        <p style="color:white;">Fatec Itu {{clock | date:'yyyy'}} &copy; - Todos os direitos reservados -
+           <span class="glyphicon glyphicon-calendar"></span> {{ clock | date:'dd/MM/yyyy'}} -
+           <span class="glyphicon glyphicon-time"></span> {{ clock | date:'HH:mm:ss'}} </p>
+         </div>
+    </div>
+</footer>

@@ -1,0 +1,35 @@
+<div ng-include src="'views/menu.html'"></div><br>
+<div class="row">
+    <div class="container" >        
+        <div class="col-sm-12" id="relProduto">     
+            <div class="panel panel-primary">
+                <div class="panel-heading">                    
+                    <h1 class="text-default"><span class="glyphicon glyphicon-tag"></span> Relatório de Grupos</h1>
+                                    </div>
+                <div class="panel-body">                                      
+                    <div class="table-responsive" id="tabelaGrupo">
+                        <table class="table table-hover table-bordered" ng-init="carregaGrupos();" ng-show="grupos.length >0">                
+                            <tr>
+                                <th>Código</th>
+                                <th>Nome</th>
+                                <th>Ativo?</th>
+                                <th>Data Inclusão</th>
+                            </tr>
+                            <tr ng-repeat="grupo in grupos">
+                                <td>{{grupo.id}}</td>
+                                <td>{{grupo.nome}}</td>
+                                <td>{{grupo.status |simNao}}</td>
+                                <td>{{grupo.dataCriacao | date}}</td>                                                          
+                            </tr>
+                        </table>
+                    </div>
+                     
+                </div>
+
+            </div> 
+        </div>
+        <a href="" ng-click="imprimeDiv('tabelaGrupo','Listagem dos Grupos');"class="btn btn-success"><span class="glyphicon glyphicon-print"></span> Imprimir</a>
+    </div>
+    
+</div>
+

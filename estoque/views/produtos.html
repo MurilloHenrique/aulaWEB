@@ -1,0 +1,82 @@
+<div ng-include src="'views/menu.html'"></div>
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-md-12">
+			<div class="panel panel-primary">
+				<div class="panel-heading">
+					Cadastro de Produtos
+				</div>
+				<div class="panel-body">
+					<!--  -->
+					<!--  Formulario-->
+					<form name="formProduto" class="form-horizontal" ng-submit="salvaProduto(produto); limpaProduto(formProduto)">
+						<div class="form-group">
+							<label class="col-md-2 control-label" for="id">
+								Código:
+							</label>
+							<div class="col-md-4">
+								<input id="id" name="id" type="text" readonly placeholder="Automático" ng-model="produto.id" class="form-control">
+							</div>
+						</div>
+
+						<div class="form-group">
+							<label class="col-md-2 control-label" for="codigobarra">
+								Código de Barra:
+							</label>
+							<div class="col-md-4">
+								<input id="codigobarra" name="codigobarra" type="text" class="form-control" placeholder="999999.999999-9" ng-model="produto.codigobarra" mask="999999.999999-9" 
+								pattern="[0-9]{6}[.][0-9]{6}[-][0-9]" ng-minlength="15" ng-maxlength="15" required>
+								<div ng-class="{'alert alert-danger': formProduto.codigobarra.$invalid}" 
+								ng-messages="formProduto.codigobarra.$error"
+								ng-if="formProduto.codigobarra.$touched">
+								<!-- somente mostraremos o erro se o campo foi 'tocado'-->
+								<p ng-message="pattern">O código de barras deve seguir o padrão 999999.999999-9</p>
+								<p ng-message="minlength">O Código de barras é muito curto</p>
+								<p ng-message="maxlength">O Código de barras é muito longo</p>
+								<p ng-message="required">O Código de barras é obrigatório</p>
+								</div>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-md-2 control-label" for="nome">
+								Nome:
+							</label>
+							<div class="col-md-6">
+								<input type="text" id="nome" name="nome" placeholder="Nome do Produto" class="form-control" ng-model="produto.nome" required ng-minlength="3" ng-maxlength="50">
+
+								<div ng-class="{'alert alert-danger': formProduto.nome.$invalid}" 
+								ng-messages="formProduto.nome.$error"
+								ng-if="formProduto.nome.$touched">
+								<!-- somente mostraremos o erro se o campo foi 'tocado'-->
+								<p ng-message="minlength">O Nome do produto é muito curto</p>
+								<p ng-message="maxlength">O Nome do produto é muito longo</p>
+								<p ng-message="required">O Nome do produto é obrigatório</p>
+								</div>
+
+							</div>
+						</div>
+
+						<div class="form-group" ng-show="produto.codigobarra && produto.nome">
+							<label class="col-md-2 control-label">QR Code:</label>
+							<div class="col-md-4">
+								<img src="http://chart.apis.google.com/chart?cht=qr&chl={{produto.codigobarra}}&chs=120x120" title="QR Code do produto {{produto.nome}}"/>
+							</div>
+						</div>
+
+						<div class="form-group">
+							<label class="col-md-2 control-label"></label>
+							<div class="col-md-8">
+								<button id="salvar" class="btn btn-success" type="submit" title="Salvar" data-ng-disabled="formProduto.$invalid">
+									Salvar
+								</button>
+								<a href="#/menu" class="btn btn-warning" title="Voltar">
+									Voltar
+								</a>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

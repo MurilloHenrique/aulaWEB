@@ -1,0 +1,147 @@
+<!-- Para facilitar a criação dos formulários, visite http://bootsnipp.com/forms ou http://www.layoutit.com/ -->
+<div ng-include src="'views/menu.html'"></div><br>
+<div class="container-fluid">
+    <div class="row">
+        <!-- coluna do formulario -->
+        <div class="col-md-12">
+            <!-- criacao do painel do formulario -->
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h4><i class="glyphicon glyphicon-shopping-cart"></i> Pedidos de Vendas</h4>
+                </div>                    
+                <div class="panel-body">                    
+                    <!-- formulario criado através do site http://bootsnipp.com/forms -->
+                    <form name="formPedido" class="form-horizontal"   ng-submit="salvaPedido(pedido);">
+                        <fieldset>
+                            <!-- titulo do formulario -->
+                            <legend>Novo Pedido</legend>
+                            <!-- Exemplo de Caixa de Texto -->
+                            <div class="form-group">
+                                <label class="col-md-2 control-label" for="id">Código:</label>  
+                                <div class="col-md-3">
+                                    <input id="id" name="id" type="text" placeholder="Gerado automaticamente" class="form-control input-md" readonly ng-model="pedido.id" >                                    
+                                </div>                            
+                                <label class="col-md-2 control-label" for="emissao">Emissão:</label>  
+                                <div class="col-md-3">
+                                    <input id="emissao" name="emissao" type="datetime-local" class="form-control input-md" readonly ng-model="pedido.dataCriacao" >                                    
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-2 control-label" for="cliente">Cliente:*</label>
+                                <div class="col-md-3">
+                                    <!-- Iremos trazer desabilitado no combo os grupos cujo status é false
+                                         Com o track by, permitemos diferenciar os registros para o Angular saber qual é o selecionado
+                                    -->
+                                    <select id="cliente" name="cliente" ng-model="pedido.cliente" 
+                                            ng-init="carregaClientes();"                                             
+                                            ng-options="cliente as cliente.nome disable when cliente.situacao == false for cliente in clientes track by cliente.id"
+                                            class="form-control" required >
+                                        <option value="">Selecione...</option>
+                                    </select>
+                                    <div ng-class="{'alert alert-danger': formPedido.cliente.$invalid}" 
+                                         ng-messages="formPedido.cliente.$error" ng-if="formPedido.cliente.$touched">
+                                        <!-- somente exibiremos as mensagens de erros após o campo ter sido 'tocado' touched -->
+                                        <p ng-message="required">É obrigatório selecionar um Cliente</p>
+                                    </div>
+                                </div>
+                                <div id="valortotal" ng-if="pedido.id > 0">
+                                    <label class="col-md-2 control-label" for="total">Valor Total:</label>  
+                                    <div class="col-md-3" ng-init="pedido.total = 0">
+                                        <input id="total" name="total" type="number" class="form-control input-md" readonly  value="{{totalPedido()}}" style="color:blue;text-align:right" >                                    
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Exemplo de botão -->
+                            <div class="well" ng-hide="pedido.id > 0">
+                                <div class="form-group">
+                                    <label class="col-md-2 control-label"></label>
+                                    <div class="col-md-8">
+                                        <button id="salvar" name="salvar" class="btn btn-success" type="submit" title="Salva os dados do formulário" data-ng-disabled="formPedido.$invalid"><i class="glyphicon glyphicon-save"></i>&nbsp;Salvar os dados</button>
+                                        <a href="" class="btn btn-danger" ng-click="limpaArrayPedido();" title="Cancelar o cadastro"><span class="glyphicon glyphicon-share-alt"></span> Cancelar</a>
+                                        <div ng-messages='salvandoPedido'>
+                                            <div ng-message='aguarde' class='text-info'>Por favor, aguarde...<img src='img/aguarde.gif'></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </form>
+                    <!-- exibir todas as propriedades do formulario
+                    {{ formPedido | json }} -->
+                </div>
+                <!--*** ITENS DO PEDIDO ****-->
+                <div id="itensPedido"  ng-init="limpaArrayItemPedido(pedido.id)" ng-if="pedido.id > 0">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">
+                            <span class="fa fa-shopping-cart"></span> Itens do Pedido                
+                        </h3>                                                  
+                    </div>
+                    <div class="panel-body">
+                        <div class="table-responsive">                
+                            <form name="formItemPedido" autocomplete="off">
+                                <ng-form name="itempedidoForm">
+                                    <table class="table table-bordered table-hover">
+                                        <tr ng-init="carregaProdutos();">
+                                            <th>Produto</th>                                            
+                                            <th>Quantidade</th>                                
+                                            <th>Valor Unitário</th>
+                                            <th>Valor Total</th>
+                                            <th>Opções</th>
+                                        </tr>
+
+                                        <tr ng-repeat="item in itemPedido.itens">                         
+                                            <td style="width:40%">                                       
+                                        <ui-select class="btn-group dropup" ng-model="itemPedido.itens[$index].produto" theme="select2" style="width: 250px;" title="Selecione um produto da lista" >
+                                            <ui-select-match placeholder="Procurar o produto na lista...">{{$select.selected.nome}}</ui-select-match>
+                                            <ui-select-choices repeat="produto in produtos | filter: {nome:$select.search}">
+                                                <img ng-src="data:image/jpeg;base64,{{produto.foto}}" width="15" />
+                                                <span class="text-success" ng-bind-html="produto.id | highlight: $select.search"></span>-
+                                                <small ng-bind-html="produto.nome|limitTo:100 | highlight: $select.search"></small>
+                                            </ui-select-choices>
+                                        </ui-select>                                    
+                                        </td>                                        
+                                        <td>
+                                            <input type="number" name="quantidade" class="form-control" placeholder="0,00" ng-model="itemPedido.itens[$index].quantidade" value="{{itemPedido.itens[$index].quantidade}}" min="1" step="1" required/>
+                                            <div ng-class="{'alert alert-danger': itempedidoForm.quantidade.$invalid}">
+                                                <span ng-show="itempedidoForm.quantidade.$dirty && itempedidoForm.quantidade.$error.required">A quantidade é obrigatória!</span>
+                                                <span ng-show="itempedidoForm.quantidade.$dirty && itempedidoForm.quantidade.$error.min">A quantidade mínima é 1!</span>
+                                            </div>
+                                        </td>
+
+                                        <td style="width: 10%;text-align:right">
+                                            {{itemPedido.itens[$index].produto.preco}}
+
+                                        </td>
+                                        <td style="text-align:right" ng-init="itemPedido.itens[$index].produto.preco = 0">
+                                            {{(itemPedido.itens[$index].quantidade * itemPedido.itens[$index].produto.preco).toFixed(2)}}
+                                        </td>
+
+
+                                        <td><a href="" ng-click="removeItemPedido(item)" class="btn btn-xs btn-danger"><span class="glyphicon glyphicon-remove"></span></a>
+                                            <a href="" ng-click="adicionaItemPedido(pedido.id)" class="btn btn-xs btn-success" ng-disabled="itempedidoForm.$invalid"><span class="glyphicon glyphicon-plus"></span></a></td>
+
+                                        </tr>
+                                        <a href="" ng-click="adicionaItemPedido(pedido.id)" class="btn btn-xs btn-success"><span class="glyphicon glyphicon-plus"></span>Novo Item do Pedido</a>
+                                    </table>
+                                </ng-form>
+                            </form>                
+                        </div>
+                    </div>
+                    <div class="panel-footer">           
+                        <div class="form-group" >   
+                            <a href="#/menu" ng-click="limpaArrayPedido();limpaArrayItemPedido()" class="btn btn-lg btn-primary"><span class="fa fa-arrow-left"></span> Voltar</a>
+                            <a href="#/pedidos" ng-click="limpaArrayPedido();limpaArrayItemPedido()" class="btn btn-lg btn-success"><span class="fa fa-shopping-cart"></span> Novo Pedido</a>
+                            <button class="btn btn-info btn-lg pull-right" ng-click="salvaItemPedido(itemPedido.itens);limpaArrayPedido();limpaArrayItemPedido();limpaFormPedido('formPedido')" data-ng-disabled="itempedidoForm.$invalid"><span class="fa fa-save" ng-hide="salvandoItemPedido"></span><i class="fa fa-spinner fa-spin fa-3x fa-fw margin-bottom" ng-show="salvandoItemPedido"></i> Salvar Itens do Pedido</button>                                               
+                            <div ng-messages='salvandoItemPedido'>
+                                <div ng-message='aguarde' class='text-info'>Por favor, aguarde...<img src='img/aguarde.gif'></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="panel-footer"> 
+                <h4>Campos marcados com * são de preenchimento obrigatório</h4>
+            </div>
+        </div>
+    </div>
+</div>

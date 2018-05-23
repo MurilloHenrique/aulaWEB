@@ -1,0 +1,247 @@
+<div ng-include src="'views/menu.html'"></div><br>
+<div class="container-fluid">
+    <div class="row">
+        <!-- coluna do formulario -->
+        <div class="col-md-6">
+            <!-- criacao do painel do formulario -->
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h4><i class="glyphicon glyphicon-lock"></i> Cadastro de Usuários</h4>
+                </div>                    
+                <div class="panel-body">                    
+                    <!-- formulario criado através do site http://bootsnipp.com/forms -->
+                    <form name="formUsuario" class="form-horizontal"   ng-submit="salvaUsuario(usuario);
+                            limpaUsuario(formUsuario);limpaFoto(foto);limpaArrayUsuario()">
+                        <fieldset>
+                            <!-- titulo do formulario -->
+                            <legend>Dados do Usuário</legend>
+                            <!-- Exemplo de Caixa de Texto -->
+                            <div class="form-group">
+                                <label class="col-md-4 control-label" for="id">Código:</label>  
+                                <div class="col-md-6">
+                                    <input id="id" name="id" type="text" placeholder="Gerado automaticamente" class="form-control input-md" readonly ng-model="usuario.id" value="{{usuario.id}}">                                    
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-4 control-label" for="nome">Nome:*</label>  
+                                <div class="col-md-6">
+                                    <input id="nome" name="nome" type="text" placeholder="Nome Completo do Usuário" class="form-control input-md" required 
+                                           ng-model="usuario.nome" value="{{usuario.nome}}" ng-minlength="3"  ng-maxlength="50">  
+
+
+                                    <div ng-class="{'alert alert-danger': formUsuario.nome.$invalid}" 
+                                         ng-messages="formUsuario.nome.$error" ng-if="formUsuario.nome.$touched">
+                                        <!-- somente exibiremos as mensagens de erros após o campo ter sido 'tocado' touched -->
+                                        <p ng-message="minlength">O nome do usuário é muito curto.</p>
+                                        <p ng-message="maxlength">O nome do usuário é muito longo.</p>
+                                        <p ng-message="required">O nome do usuário é obrigatório.</p>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-4 control-label" for="login">Login:*</label>  
+                                <div class="col-md-4">
+                                    <input id="nome" name="login" type="text" placeholder="Login do Usuário" class="form-control input-md" required 
+                                           maxlength="20"
+                                           ng-model="usuario.login" value="{{usuario.login}}" ng-minlength="3"  ng-maxlength="20">  
+                                    <div ng-class="{'alert alert-danger': formUsuario.login.$invalid}" 
+                                         ng-messages="formUsuario.login.$error" ng-if="formUsuario.login.$touched">
+                                        <!-- somente exibiremos as mensagens de erros após o campo ter sido 'tocado' touched -->
+                                        <p ng-message="minlength">O login do usuário é muito curto. (mínimo de 3)</p>
+                                        <p ng-message="maxlength">O login do usuário é muito longo. (máximo de 20)</p>
+                                        <p ng-message="required">O login do usuário é obrigatório.</p>
+                                    </div>
+
+                                </div>
+                                <!-- exemplo de um contador de caracteres -->
+                                <div class="col-md-4">
+                                    <span class="badge alert-info pull-left">Caracteres Restantes: {{20 - usuario.login.length}}</span> 
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-4 control-label" for="foto">Foto:*</label>  
+                                <div class="col-md-6">
+                                    <input id="fotousuario" name="foto" type="file" class="form-control input-md" required onload="onLoad"
+                                           ng-model="usuario.foto" base-sixty-four-input  minsize="1" maxsize="4096" accept="image/*">                                            
+                                    <!-- Para consultar os accept válidos, acesse: http://www.w3schools.com/tags/att_input_accept.asp -->
+                                    <div ng-class="{'alert alert-danger': formUsuario.foto.$invalid}" 
+                                         ng-messages="formUsuario.foto.$error" ng-if="formUsuario.foto.$touched">                                    
+                                        <!-- somente exibiremos as mensagens de erros após o campo ter sido 'tocado' touched -->
+                                        <p ng-message="minsize">O tamanho da imagem é menor que o mínimo permitido! (1 byte)</p>
+                                        <p ng-message="maxsize">O tamanho da imagem ultrapassa o limite permitido! (4Mb)</p>                                        
+                                        <p ng-message="required">Selecione uma imagem para o usuário</p>
+                                    </div> 
+                                    <table class="table table-bordered table-condensed" ng-show="usuario.foto.filename">
+                                        <caption>Detalhes da Imagem</caption>
+                                        <tr class="info">
+                                            <th>Nome</th>
+                                            <th>Tipo</th>
+                                            <th>Tamanho</th>
+                                        </tr>
+                                        <tr ng-show="usuario.foto">
+                                            <td>{{usuario.foto.filename}}</td>
+                                            <td>{{usuario.foto.filetype}}</td>
+                                            <td>{{usuario.foto.filesize| bytes}}</td>
+                                        </tr>                                       
+                                    </table>
+
+                                </div>
+                                <div class="col-md-2"> 
+                                    <img src='img/usuario.png' ng-show='!usuario.foto' />
+                                    <img data-ng-src="data:image/png;base64,{{usuario.foto.base64}}" width="60" height="80" ng-show='usuario.foto && formUsuario.foto.$valid'/>
+                                </div>
+                            </div>
+                            <!-- Exemplo de Checkbox -->
+                            <div class="form-group">
+                                <label class="col-md-4 control-label" for="status">Status:*</label>
+                                <div class="col-md-6">
+                                    <div class="checkbox">
+
+                                        <input type="checkbox" id="status" name="status" ng-model="usuario.status" ng-checked="usuario.status">     
+
+                                        <label class="control-label" for="status">Usuário está ativo para uso?</label>
+                                    </div>                                    
+                                </div>
+                            </div>
+                            <!-- Exemplo Radio -->
+                            <div class="form-group">
+                                <label class="col-md-4 control-label">Tipo do Usuário:*</label> 
+                                <div class="col-md-8"> 
+                                    <label class="radio-inline" for="digitador">
+                                        <input type="radio" name="radios" id="digitador" value="digitador" ng-model="usuario.tipo">
+                                        Digitador
+                                    </label> 
+                                    <label class="radio-inline" for="administrador">
+                                        <input type="radio" name="radios" id="administrador" value="administrador" ng-model="usuario.tipo">
+                                        Administrador
+                                    </label>     
+                                </div>
+                            </div>
+                            <!-- campos de senha -->
+                            <div id="camposSenha">
+                                <fieldset><legend>Senha do Usuário</legend>
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label" for="senha">Senha:*</label>  
+                                        <div class="col-md-4">
+                                            <input id="senha" name="senha" type="password" placeholder="Senha" class="form-control input-md" required 
+                                                   maxlength="20"
+                                                   ng-model="usuario.senha" ng-minlength="6"  ng-maxlength="20">                                      
+
+
+                                            <div ng-class="{'alert alert-danger': formUsuario.senha.$invalid}" 
+                                                 ng-messages="formUsuario.senha.$error" ng-if="formUsuario.senha.$touched">
+                                                <!-- somente exibiremos as mensagens de erros após o campo ter sido 'tocado' touched -->
+                                                <p ng-message="minlength">A senha do usuário é muito curta. (mínimo de 6)</p>
+                                                <p ng-message="maxlength">A senha do usuário é muito longa. (máximo de 20)</p>
+                                                <p ng-message="required">A senha do usuário é obrigatória.</p>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label" for="confirmacao">Confirmação da Senha:*</label>  
+                                        <div class="col-md-4">
+                                            <input id="confirmacao" name="confirmacao" type="password" placeholder="Confirmação da Senha" class="form-control input-md" required 
+                                                   maxlength="20" eIgual="senha" verifica-senha="senha"
+                                                   ng-model="confirmacao" 
+                                                   ng-minlength="6"  ng-maxlength="20">                                      
+                                            <div ng-class="{'alert alert-danger': formUsuario.confirmacao.$invalid}" 
+                                                 ng-if="formUsuario.confirmacao.$touched">                                                                              
+                                                <p ng-show="formUsuario.confirmacao.$error.comparasenha">
+                                                    A senha e a confirmação da senha são diferentes!                                          
+                                                </p>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </div>
+
+                            <!-- Exemplo de botão -->
+                            <div class="well">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label"></label>
+                                    <div class="col-md-8">
+                                        <button id="salvar" name="salvar" class="btn btn-success" type="submit" title="Salva os dados do formulário" data-ng-disabled="formUsuario.$invalid"><i class="glyphicon glyphicon-save"></i>&nbsp;Salvar os dados</button>
+                                        <a href="" class="btn btn-danger" ng-click="limpaArrayUsuario();
+                                            menu()" title="Cancelar o cadastro"><span class="glyphicon glyphicon-share-alt"></span> Cancelar</a>
+
+                                        <div ng-messages='requisicaoServidor'>
+                                            <div ng-message='aguarde' class='text-info'>Por favor, aguarde...<img src='img/aguarde.gif'></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
+
+
+                    </form>
+                    <!-- exibir todas as propriedades do formulario
+                    {{ formUsuario | json }} -->
+                </div>
+                <div class="panel-footer">
+                    <h4>Campos marcados com * são de preenchimento obrigatório</h4>
+                </div>
+            </div>
+        </div>
+        <!-- coluna da tabela -->
+        <div class="col-md-6">
+            <!-- caixa de Pesquisa (somente é exibida quando há algum registro no array) -->
+            <div ng-show="usuarios.length !== 0">
+                <div class="input-group">
+                    <span class="input-group-addon" id="procuraUsuario"><i class="glyphicon glyphicon-search"></i></span>
+                    <input type="text"  ng-model="filterUsuario"
+                           class="form-control input-lg" placeholder="Procurar...">
+                </div>
+            </div> 
+            <!-- fim da caixa de pesquisa -->
+
+            <!-- tabela com os dados. Ao inicializar, carrega os dados no array -->
+            <div class="panel panel-primary">
+                <div class="panel-heading"><h4><span class="glyphicon glyphicon-th-list"></span> Listagem dos Usuarios</h4></div>
+                <div class="panel-body">
+                    <div class="table-responsive">             
+                        <table class="table table-hover table-bordered" ng-init="carregaUsuarios();" ng-show="usuarios.length > 0">
+                            <tr>
+                                <th>Código</th>
+                                <th>Login</th>
+                                <th>Nome</th>
+                                <th>Ativo?</th>
+                                <th>Foto</th>
+                            </tr>
+                            <!-- utilizando a paginacao -->
+                            <tr dir-paginate="usuario in usuarios | filter:filterUsuario |
+                                itemsPerPage: pageSize" current-page="currentPage" 
+                                pagination-id="usuariosPagination">   
+                                <td>{{usuario.id}}</td>
+                                <td>{{usuario.login}}</td>
+                                <td>{{usuario.nome}}</td>
+                                <td>{{usuario.status| simNao}}</td>                                                                
+                                <td><img ng-src="data:image/jpeg;base64,{{usuario.foto}}" class="img-responsive"/></td>
+                            </tr>                            
+                        </table>                
+                    </div>
+                </div>
+                <div class="panel-footer" ng-show="usuarios.length > 0">
+                    <span class="badge pull-right">Total de Registros: {{(usuarios|filter:filterUsuario).length}} de {{usuarios.length}}</span> 
+                </div>
+                <!-- Alerta quando não existem registros -->
+                <div class="alert alert-info"
+                     ng-show="usuarios.length === 0">
+                    <p class="text-info">
+                        <span class="glyphicon glyphicon-ok"></span>
+                        Ainda não há nenhum registro cadastrado.
+                    </p>
+                </div> 
+                <!-- paginacao -->
+                <div class="text-center">
+                    <dir-pagination-controls boundary-links="true"
+                                             pagination-id="usuariosPagination" 
+                                             on-page-change="pageChangeHandler(newPageNumber)"
+                                             template-url="views/paginacao.html"></dir-pagination-controls>
+                </div>
+                <!-- fim do alerta --> 
+            </div>
+        </div>
+    </div>
